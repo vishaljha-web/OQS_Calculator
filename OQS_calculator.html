@@ -1,130 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weighted Quality Score Calculator</title>
-<style>
-  body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-  h1 { text-align: center; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  th { background-color: #f2f2f2; }
-  input[type=number] { width: 60px; }
-  .result { font-weight: bold; font-size: 18px; margin-top: 20px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OQS Calculator - Professional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .score-button { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .score-button:hover { transform: translateY(-2px); }
+        .score-button.active { transform: scale(1.1); }
+        .param-card { transition: all 0.3s ease; }
+        .param-card:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .animated-bg { background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe); background-size: 400% 400%; animation: gradient 15s ease infinite; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .pulse-animation { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.8; } }
+    </style>
 </head>
-<body>
+<body class="min-h-screen animated-bg p-4 md:p-8">
+<div class="max-w-5xl mx-auto">
 
-<h1>Weighted Quality Score Calculator</h1>
+    <!-- Header -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-6 md:p-8 mb-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-2">OQS Calculator</h1>
+        <p class="text-gray-600 text-lg">Opportunity Quality Score Assessment Tool</p>
+    </div>
 
-<form id="scoreForm">
-<table>
-  <tr>
-    <th>Dimension</th>
-    <th>Weight %</th>
-    <th>Score (0–5)</th>
-    <th>Criteria</th>
-  </tr>
-  <tr>
-    <td>Compensation Competitiveness</td>
-    <td>20%</td>
-    <td><input type="number" id="compensation" min="0" max="5" required></td>
-    <td>0 = <2.5 LPA, 5 = >10 LPA</td>
-  </tr>
-  <tr>
-    <td>Job Role Quality</td>
-    <td>15%</td>
-    <td><input type="number" id="jobrole" min="0" max="5" required></td>
-    <td>0 = Support/Data Entry, 5 = High-tech roles</td>
-  </tr>
-  <tr>
-    <td>Financial Stability</td>
-    <td>15%</td>
-    <td><input type="number" id="financial" min="0" max="5" required></td>
-    <td>0 = <5 Cr revenue/startup, 5 = Publicly listed/Global MNC</td>
-  </tr>
-  <tr>
-    <td>Glassdoor Ratings (Work Culture)</td>
-    <td>10%</td>
-    <td><input type="number" id="glassdoor" min="0" max="5" required></td>
-    <td>0 = <2.5, 5 = >4.0</td>
-  </tr>
-  <tr>
-    <td>Leadership Profile</td>
-    <td>15%</td>
-    <td><input type="number" id="leadership" min="0" max="5" required></td>
-    <td>0 = Unknown founders, 5 = Visionary leaders</td>
-  </tr>
-  <tr>
-    <td>Age of the Company</td>
-    <td>15%</td>
-    <td><input type="number" id="age" min="0" max="5" required></td>
-    <td>0 = <1 yr, 5 = >10 yrs</td>
-  </tr>
-  <tr>
-    <td>Past Campus Engagement & Feedback</td>
-    <td>10%</td>
-    <td><input type="number" id="engagement" min="0" max="5" required></td>
-    <td>0 = Negative feedback, 5 = Excellent long-term engagement</td>
-  </tr>
-</table>
+    <!-- Mode Selection -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-6 md:p-8 mb-6">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4 text-center">Select Assessment Type</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button id="managementBtn" onclick="changeMode('management')" class="group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-6 px-8 rounded-2xl font-semibold shadow-lg hover:shadow-2xl transform hover:scale-105">
+                Management Role
+            </button>
+            <button id="techBtn" onclick="changeMode('tech')" class="group relative overflow-hidden bg-gray-100 text-gray-700 py-6 px-8 rounded-2xl font-semibold shadow-md hover:shadow-xl transform hover:scale-105">
+                Tech Role
+            </button>
+        </div>
+    </div>
 
-<button type="button" onclick="calculateScore()">Calculate Score</button>
-</form>
+    <!-- Parameters -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-6 md:p-8 mb-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Assessment Parameters</h2>
+            <button onclick="resetScores()" class="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-xl font-medium hover:bg-red-100 transition-all">Reset</button>
+        </div>
+        <div id="parametersContainer" class="space-y-4"></div>
+    </div>
 
-<div class="result" id="result"></div>
+    <!-- Result -->
+    <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden text-center p-8 md:p-12">
+        <h2 class="text-2xl md:text-3xl font-semibold mb-3">Overall Quality Score</h2>
+        <div id="oqsScore" class="text-7xl md:text-8xl font-bold mb-3 pulse-animation">0.00</div>
+        <div class="text-xl text-gray-700 mb-4">out of 100</div>
+        <div id="scoreInterpretation" class="text-lg font-medium bg-gray-100 rounded-xl px-6 py-3 inline-block"></div>
+    </div>
+
+</div>
 
 <script>
-function calculateScore() {
-  // Get scores from inputs
-  const compensation = parseFloat(document.getElementById("compensation").value) || 0;
-  const jobrole = parseFloat(document.getElementById("jobrole").value) || 0;
-  const financial = parseFloat(document.getElementById("financial").value) || 0;
-  const glassdoor = parseFloat(document.getElementById("glassdoor").value) || 0;
-  const leadership = parseFloat(document.getElementById("leadership").value) || 0;
-  const age = parseFloat(document.getElementById("age").value) || 0;
-  const engagement = parseFloat(document.getElementById("engagement").value) || 0;
+let currentMode='management';
+let scores={};
 
-  // Weights
-  const weights = {
-    compensation: 0.20,
-    jobrole: 0.15,
-    financial: 0.15,
-    glassdoor: 0.10,
-    leadership: 0.15,
-    age: 0.15,
-    engagement: 0.10
-  };
+const managementParams=[
+    {id:'param1',name:'Company Tier',weight:60,criteria:['0 - Not Applicable','1 - Other (<1000 Employees)','2 - Research/KPO','3 - Government/Other (>1000 Employees) OR >$250M Valuation','4 - MNC/BSE/NSE/Publicly Listed/Unicorn','5 - Big 5 & Fortune 500']},
+    {id:'param2',name:'Job Role Quality (Glassdoor Rating)',weight:30,criteria:['0 - <2.5','1 - 2.5–2.9','2 - 3.0–3.2','3 - 3.3–3.6','4 - 3.7–4.0','5 - >4.0']},
+    {id:'param3',name:'Compensation',weight:10,criteria:['0 - <2.5 LPA','1 - 2.5–3 LPA','2 - 3–4 LPA','3 - 4–6 LPA','4 - 6–9 LPA','5 - >9 LPA']}
+];
 
-  // Calculate weighted score
-  const weightedScore = 
-      (compensation * weights.compensation) +
-      (jobrole * weights.jobrole) +
-      (financial * weights.financial) +
-      (glassdoor * weights.glassdoor) +
-      (leadership * weights.leadership) +
-      (age * weights.age) +
-      (engagement * weights.engagement);
+const techParams=[
+    {id:'param1',name:'Compensation Competitiveness',weight:20,criteria:['0 - <2.5 LPA','1 - 2.5–4 LPA','2 - 4.1–5.99 LPA','3 - 6–7.99 LPA','4 - 8–10 LPA','5 - >10 LPA']},
+    {id:'param2',name:'Job Role Quality',weight:15,criteria:['0 - Support/Data Entry','1 - Testing only','2 - Non-core IT','3 - Development/QA with service companies','4 - Core SD/DE role','5 - High-tech (AI/ML/Cloud/Data Science)']},
+    {id:'param3',name:'Financial Stability',weight:15,criteria:['0 - <5 Cr revenue/startup pre-funding','1 - Early stage seed','2 - Series A','3 - Series B/C','4 - Profitable midsize','5 - Publicly listed/Global MNC']},
+    {id:'param4',name:'Glassdoor Ratings (Work Culture)',weight:10,criteria:['0 - <2.5','1 - 2.5–2.9','2 - 3.0–3.2','3 - 3.3–3.6','4 - 3.7–4.0','5 - >4.0']},
+    {id:'param5',name:'Leadership Profile',weight:15,criteria:['0 - Unknown founders','1 - <5 yrs exp','2 - Mid-career founders','3 - Leaders with IIT/NIT/IIM or global pedigree','4 - Industry-recognized leaders with >15 yrs exp','5 - Visionary leaders with proven track record']},
+    {id:'param6',name:'Age of the Company',weight:15,criteria:['0 - <1 yr','1 - 1–2 yrs','2 - 3–4 yrs','3 - 5–7 yrs','4 - 8–10 yrs','5 - >10 yrs']},
+    {id:'param7',name:'Past Campus Engagement & Feedback',weight:10,criteria:['0 - Negative feedback','1 - Poor process','2 - Neutral','3 - Average','4 - Positive','5 - Excellent and long-term engagement']}
+];
 
-  // Convert to 0-100 scale
-  const finalScore = (weightedScore / 5) * 100;
+function changeMode(mode){
+    currentMode=mode;
+    const managementBtn=document.getElementById('managementBtn');
+    const techBtn=document.getElementById('techBtn');
 
-  // Decision
-  let decision = "";
-  if(finalScore >= 70) {
-    decision = "High Quality ✅";
-  } else if(finalScore >= 50) {
-    decision = "Medium Quality ⚠️";
-  } else {
-    decision = "Low Quality ❌";
-  }
+    if(mode==='management'){
+        managementBtn.className='group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-6 px-8 rounded-2xl font-semibold shadow-lg hover:shadow-2xl transform hover:scale-105';
+        techBtn.className='group relative overflow-hidden bg-gray-100 text-gray-700 py-6 px-8 rounded-2xl font-semibold shadow-md hover:shadow-xl transform hover:scale-105';
+    }else{
+        techBtn.className='group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-6 px-8 rounded-2xl font-semibold shadow-lg hover:shadow-2xl transform hover:scale-105';
+        managementBtn.className='group relative overflow-hidden bg-gray-100 text-gray-700 py-6 px-8 rounded-2xl font-semibold shadow-md hover:shadow-xl transform hover:scale-105';
+    }
 
-  // Show result
-  document.getElementById("result").innerHTML = 
-      `Final Score: ${finalScore.toFixed(2)} <br> Recommendation: ${decision}`;
+    resetScores();
+    renderParameters();
 }
-</script>
 
+function renderParameters(){
+    const params=currentMode==='management'?managementParams:techParams;
+    const container=document.getElementById('parametersContainer');
+    container.innerHTML=params.map(p=>`
+        <div class="param-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border-2 border-gray-100 shadow-md">
+            <h3 class="text-lg font-bold mb-2">${p.name} (${p.weight}%)</h3>
+            <div class="mb-2 text-sm text-gray-700">Criteria: ${p.criteria.join(', ')}</div>
+            <div class="flex gap-2 flex-wrap">
+                ${[0,1,2,3,4,5].map(n=>`
+                    <button onclick="setScore('${p.id}',${n})" class="score-button ${scores[p.id]===n?'active bg-indigo-500 text-white':'bg-white text-gray-700 border'} w-12 h-12 rounded-xl font-bold">${n}</button>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+    calculateOQS();
+}
+
+function setScore(id,val){ scores[id]=val; renderParameters(); }
+
+function calculateOQS(){
+    const params=currentMode==='management'?managementParams:techParams;
+    let total=0,totalWeight=0;
+    params.forEach(p=>{ total += ((scores[p.id]||0)/5)*p.weight; totalWeight+=p.weight; });
+    const finalScore=(total/totalWeight)*100;
+    document.getElementById('oqsScore').textContent=finalScore.toFixed(2);
+    document.getElementById('scoreInterpretation').textContent=
+        finalScore>=80?'🏆 Excellent Opp':
+        finalScore>=60?'✨ Good Opp':
+        finalScore>=40?'⚠️ Average Opp':'❌ Poor Opp';
+}
+
+function resetScores(){ scores={}; renderParameters(); }
+
+renderParameters();
+</script>
 </body>
 </html>
