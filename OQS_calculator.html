@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weighted Quality Score Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+  h1 { text-align: center; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  input[type=number] { width: 60px; }
+  .result { font-weight: bold; font-size: 18px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Weighted Quality Score Calculator</h1>
+
+<form id="scoreForm">
+<table>
+  <tr>
+    <th>Dimension</th>
+    <th>Weight %</th>
+    <th>Score (0–5)</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Compensation Competitiveness</td>
+    <td>20%</td>
+    <td><input type="number" id="compensation" min="0" max="5" required></td>
+    <td>0 = <2.5 LPA, 5 = >10 LPA</td>
+  </tr>
+  <tr>
+    <td>Job Role Quality</td>
+    <td>15%</td>
+    <td><input type="number" id="jobrole" min="0" max="5" required></td>
+    <td>0 = Support/Data Entry, 5 = High-tech roles</td>
+  </tr>
+  <tr>
+    <td>Financial Stability</td>
+    <td>15%</td>
+    <td><input type="number" id="financial" min="0" max="5" required></td>
+    <td>0 = <5 Cr revenue/startup, 5 = Publicly listed/Global MNC</td>
+  </tr>
+  <tr>
+    <td>Glassdoor Ratings (Work Culture)</td>
+    <td>10%</td>
+    <td><input type="number" id="glassdoor" min="0" max="5" required></td>
+    <td>0 = <2.5, 5 = >4.0</td>
+  </tr>
+  <tr>
+    <td>Leadership Profile</td>
+    <td>15%</td>
+    <td><input type="number" id="leadership" min="0" max="5" required></td>
+    <td>0 = Unknown founders, 5 = Visionary leaders</td>
+  </tr>
+  <tr>
+    <td>Age of the Company</td>
+    <td>15%</td>
+    <td><input type="number" id="age" min="0" max="5" required></td>
+    <td>0 = <1 yr, 5 = >10 yrs</td>
+  </tr>
+  <tr>
+    <td>Past Campus Engagement & Feedback</td>
+    <td>10%</td>
+    <td><input type="number" id="engagement" min="0" max="5" required></td>
+    <td>0 = Negative feedback, 5 = Excellent long-term engagement</td>
+  </tr>
+</table>
+
+<button type="button" onclick="calculateScore()">Calculate Score</button>
+</form>
+
+<div class="result" id="result"></div>
+
+<script>
+function calculateScore() {
+  // Get scores from inputs
+  const compensation = parseFloat(document.getElementById("compensation").value) || 0;
+  const jobrole = parseFloat(document.getElementById("jobrole").value) || 0;
+  const financial = parseFloat(document.getElementById("financial").value) || 0;
+  const glassdoor = parseFloat(document.getElementById("glassdoor").value) || 0;
+  const leadership = parseFloat(document.getElementById("leadership").value) || 0;
+  const age = parseFloat(document.getElementById("age").value) || 0;
+  const engagement = parseFloat(document.getElementById("engagement").value) || 0;
+
+  // Weights
+  const weights = {
+    compensation: 0.20,
+    jobrole: 0.15,
+    financial: 0.15,
+    glassdoor: 0.10,
+    leadership: 0.15,
+    age: 0.15,
+    engagement: 0.10
+  };
+
+  // Calculate weighted score
+  const weightedScore = 
+      (compensation * weights.compensation) +
+      (jobrole * weights.jobrole) +
+      (financial * weights.financial) +
+      (glassdoor * weights.glassdoor) +
+      (leadership * weights.leadership) +
+      (age * weights.age) +
+      (engagement * weights.engagement);
+
+  // Convert to 0-100 scale
+  const finalScore = (weightedScore / 5) * 100;
+
+  // Decision
+  let decision = "";
+  if(finalScore >= 70) {
+    decision = "High Quality ✅";
+  } else if(finalScore >= 50) {
+    decision = "Medium Quality ⚠️";
+  } else {
+    decision = "Low Quality ❌";
+  }
+
+  // Show result
+  document.getElementById("result").innerHTML = 
+      `Final Score: ${finalScore.toFixed(2)} <br> Recommendation: ${decision}`;
+}
+</script>
+
+</body>
+</html>
